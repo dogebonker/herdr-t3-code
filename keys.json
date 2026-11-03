@@ -1,0 +1,18 @@
+{
+  "layout:herdr-t3": {
+    "cmd-shift-b": "t3-chrome.sidebar",
+    "cmd-shift-a": "t3-tabs.view",
+    "cmd-shift-s": "t3-focus.settle",
+    "cmd-shift-e": "layout.toggle:panel",
+    "cmd-shift-t": "mod.open:t3-theme",
+    "cmd-1": "t3-focus.jump-1",
+    "cmd-2": "t3-focus.jump-2",
+    "cmd-3": "t3-focus.jump-3",
+    "cmd-4": "t3-focus.jump-4",
+    "cmd-5": "t3-focus.jump-5",
+    "cmd-6": "t3-focus.jump-6",
+    "cmd-7": "t3-focus.jump-7",
+    "cmd-8": "t3-focus.jump-8",
+    "cmd-9": "t3-focus.jump-9"
+  }
+}
