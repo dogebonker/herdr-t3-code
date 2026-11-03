@@ -1,0 +1,2 @@
+{ "place": "none", "title": "Create theme",
+  "overlay": { "kind": "dialog", "modal": true, "width": 880, "height": 640 } }
