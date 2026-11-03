@@ -22,6 +22,19 @@
           "window_drag": true
         },
         {
+          "id": "limits",
+          "type": "block",
+          "content": {
+            "mod": "t3-limits",
+            "props": {
+              "node": "limits"
+            }
+          },
+          "size": {
+            "px": 112
+          }
+        },
+        {
           "id": "sidebar-lists",
           "type": "stack",
           "children": [

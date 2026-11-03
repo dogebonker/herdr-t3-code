@@ -1,8 +1,9 @@
 // New, as T3 starts a thread: pick the space (or a new one), then what to run there.
 import { View, div, svg, image } from "gpui-kit";
 import { h_flex, v_flex, InputState, Input } from "gpui-base";
-import { theme, spaces, panes, knownAgents, run, openOverlay, closeOverlay, props, window, keys, home, layout } from "herdr";
+import { theme, spaces, panes, knownAgents, run, openOverlay, closeOverlay, props, window, keys, home, layout, shared } from "herdr";
 import { avatar } from "./space-icon.js";
+import { activeAccount, accountArgv } from "./accounts.js";
 
 function shortcut(name) {
   const k = keys().find(b => b.section === "global" && b.action === name);
@@ -84,7 +85,9 @@ export default class NewMenu extends View {
 
   start(a) {
     closeOverlay(props().overlay);
-    const what = a ? { argv: a.run } : {};
+    // t3-limits' account for new agents of this kind (a home path only); its folder is on this computer.
+    const here = this.target === NEW || !this.target.machine;
+    const what = a ? { argv: here ? accountArgv(a.key, activeAccount(shared("limits.accounts"), a.key), a.run) : a.run } : {};
     // Starting anything here means seeing it: the agent view would keep it out of sight.
     if (find(layout(), "view")?.active === "agent") run("layout.select", { stack: "view", child: "main" });
     if (this.target === NEW) run("space.new", a ? { ...what, tab: a.name } : what);
