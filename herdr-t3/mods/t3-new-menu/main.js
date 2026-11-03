@@ -1,7 +1,7 @@
 // New, as T3 starts a thread: pick the space (or a new one), then what to run there.
 import { View, div, svg, image } from "gpui-kit";
 import { h_flex, v_flex, InputState, Input } from "gpui-base";
-import { theme, spaces, panes, knownAgents, run, openOverlay, closeOverlay, props, window, keys, home, layout, shared, pickFolder } from "herdr";
+import { theme, spaces, panes, knownAgents, run, openOverlay, closeOverlay, props, window, keys, home, layout, shared, pickFolder, notify } from "herdr";
 import { avatar } from "./space-icon.js";
 import { activeAccount, accountArgv } from "./accounts.js";
 
@@ -91,6 +91,12 @@ export default class NewMenu extends View {
     closeOverlay(props().overlay);
     // t3-limits' account for new agents of this kind (a home path only); its folder is on this computer.
     const here = this.target === NEW || !this.target.machine;
+    // t3-system's reading of this computer: below its free-memory floor, no new agents here (a terminal is fine).
+    const load = shared("system.load");
+    if (a && here && load?.low && Date.now() - load.at < 30000) {
+      notify({ title: `${a.name} not started`, body: `Only ${load.free}% of memory is free. Close something until ${load.min}% is, then start it again.`, level: "warning" });
+      return;
+    }
     const what = a ? { argv: here ? accountArgv(a.key, activeAccount(shared("limits.accounts"), a.key), a.run) : a.run } : {};
     // Starting anything here means seeing it: the agent view would keep it out of sight.
     if (find(layout(), "view")?.active === "agent") run("layout.select", { stack: "view", child: "main" });

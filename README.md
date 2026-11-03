@@ -11,7 +11,7 @@ Each folder here is one thing you can add to Herdr. Take a single mod into the l
 | [`t3-focus`](t3-focus) | mod | An inbox for your coding agents. The ones that need you sit on top, busy ones fold into Working, finished ones get settled or snoozed until later. Mark unread, multi-select, PR badges per agent, and "reference this agent" into another agent's prompt. |
 | [`t3-theme`](t3-theme) | mod | A theme editor. Start from any theme, change its colors with a live preview, save it as your own. |
 | [`t3-limits`](t3-limits) | mod | Usage limits for your agent subscriptions: Codex, Claude Code, Grok Build, Cursor, OpenCode Go and Antigravity, each with a bar for the window closest to its limit and when it resets. It also keeps several Claude and Codex accounts with their own limits. On its own it is a thin bar across the top of the window. In the layout it sits at the top of the sidebar, and you pick which account new agents use. Add it with herdr.dev/mods/dogebonker/t3-limits. |
-| [`herdr-t3`](herdr-t3) | layout | The whole window, T3 Code style: the Focus inbox or a Spaces + Agents sidebar, project favicons as space icons, slim tabs, framed panes, a one-agent view, a Files and Changes panel, and the theme editor. |
+| [`herdr-t3`](herdr-t3) | layout | The whole window, T3 Code style: the Focus inbox or a Spaces + Agents sidebar, project favicons as space icons, slim tabs, framed panes, a one-agent view, a Files and Changes panel, the theme editor, and a CPU, memory and GPU readout that stops the New menu from starting agents when less than 15% of memory is free. |
 
 ## Add one
 
@@ -46,6 +46,7 @@ node --test herdr-t3/mods/t3-focus/check-focus.cjs
 node --test herdr-t3/mods/t3-theme/check-theme.cjs
 node herdr-t3/mods/t3-spaces/check-icons.cjs
 node herdr-t3/mods/t3-limits/check-limits.cjs
+node --test herdr-t3/mods/t3-system/check-system.cjs
 ```
 
 `check-sidebar.cjs` and `check-pane.cjs` need Herdr's built-in icons, so run them from the installed copies in `~/.config/herdr-app/mods/`. `herdr-app check <mod folder>` loads a mod once and reports problems.

@@ -35,6 +35,16 @@
           }
         },
         {
+          "id": "system",
+          "type": "block",
+          "content": {
+            "mod": "t3-system"
+          },
+          "size": {
+            "px": 28
+          }
+        },
+        {
           "id": "sidebar-lists",
           "type": "stack",
           "children": [
