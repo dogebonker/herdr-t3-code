@@ -5,9 +5,13 @@
 
 import { View, div, svg } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
-import { spaces, agents, machines, panes, layout, run, openOverlay, exec, hc, theme, shared, setShared, watchFolder, window, readTextFile } from "herdr";
+import { spaces, agents, machines, panes, layout, run, openOverlay, exec, hc, theme, shared, setShared, watchFolder, window, readTextFile, pickFolder } from "herdr";
 import * as fs from "fs/promises";
 import { avatar, findFavicon, cacheImage } from "./space-icon.js";
+
+// space.new without a folder starts where the focused terminal is; a new space here starts where the person picks.
+// Cancelling the picker makes nothing.
+const newSpace = (args = {}) => pickFolder({ prompt: "Open as space" }).then((folder) => { if (folder) run("space.new", { ...args, folder }); });
 
 // Where a space is now: its first terminal's live folder, else where it was made.
 // `ps`: panes(), read once by the caller (each read copies every pane).
@@ -283,12 +287,12 @@ export default class Spaces extends View {
         .when(!connected, el => el.child(div().flex_none().child((machine?.state ?? "asleep").replace(/_/g, " "))))
         .when(connected, el => el.child(div().id(`machine-add-${m ?? "local"}`).size(20).flex_none().flex().items_center().justify_center().rounded(4)
           .role("button").accessibility_label("New space here").hover(s => s.bg(t.hover).text_color(t.foreground))
-          .on_click((_e, cx) => { cx.stop_propagation(); run("space.new", m ? { machine: m } : {}); }).child(svg("mods/workspace-chrome/plus.svg").size(12))))
+          .on_click((_e, cx) => { cx.stop_propagation(); m ? run("space.new", { machine: m }) : newSpace(); }).child(svg("mods/workspace-chrome/plus.svg").size(12))))
         .child(div().size(6).rounded_full().flex_none().bg(connected ? t.ansi2 : t.dim))
         .child(svg(`mods/workspace-chrome/chevron-${folded ? "right" : "down"}.svg`).size(12).flex_none());
       const empty = h_flex().id(`machine-new-${m ?? "local"}`).h(30).flex_none().px(8).gap(8).items_center().rounded(8)
         .text_size(13).text_color(t.dim).hover(s => s.bg(t.hover).text_color(t.foreground))
-        .on_click(() => run("space.new", m ? { machine: m } : {}))
+        .on_click(() => m ? run("space.new", { machine: m }) : newSpace())
         .child(svg("mods/workspace-chrome/plus.svg").size(12)).child("New space there");
       return [head, ...(folded ? [] : mine.length ? mine.map(draw) : [loading(m) ? loadingRow(m) : empty])];
     });
@@ -413,7 +417,7 @@ export default class Spaces extends View {
       .child(h_flex().id("spaces-heading").h(32).flex_none().pl(16).pr(10).items_center().justify_between().text_size(12).font_medium().text_color(t.dim)
         .child(div().text_color(t.muted).child("Spaces"))
         .child(div().id("space-new").size(26).flex_none().flex().items_center().justify_center().rounded(6).role("button").accessibility_label("New space").hover(s => s.bg(t.hover).text_color(t.foreground))
-          .on_click(() => run("space.new")).child(svg("mods/workspace-chrome/plus.svg").size(14))))
+          .on_click(() => newSpace()).child(svg("mods/workspace-chrome/plus.svg").size(14))))
       .child(v_flex().id("space-list").flex_1().min_h(0).overflow_y_scroll()
         .on_mouse_up("left", (_e, cx) => { this.pressed = null; cx.notify(); })
         .child(v_flex().id("space-content").w_full().flex_none().px(8).pb(8)

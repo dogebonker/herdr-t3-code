@@ -13,6 +13,7 @@
     "cmd-6": "t3-focus.jump-6",
     "cmd-7": "t3-focus.jump-7",
     "cmd-8": "t3-focus.jump-8",
-    "cmd-9": "t3-focus.jump-9"
+    "cmd-9": "t3-focus.jump-9",
+    "cmd-n": "t3-chrome.new-space"
   }
 }

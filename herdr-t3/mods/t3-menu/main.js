@@ -6,9 +6,13 @@
 
 import { View, div, svg } from "gpui-kit";
 import { v_flex, h_flex, InputState, Input } from "gpui-base";
-import { run, props, closeOverlay, openOverlay, theme, keys, terminals, spaces, panes, exec, shared, setShared, home, appHome } from "herdr";
+import { run, props, closeOverlay, openOverlay, theme, keys, terminals, spaces, panes, exec, shared, setShared, home, appHome, pickFolder } from "herdr";
 import * as fs from "fs/promises";
 import { avatar, cacheImage } from "./space-icon.js";
+
+// space.new without a folder starts where the focused terminal is; a new space here starts where the person picks.
+// Cancelling the picker makes nothing.
+const newSpace = (args = {}) => pickFolder({ prompt: "Open as space" }).then((folder) => { if (folder) run("space.new", { ...args, folder }); });
 
 // Where a space is now: its first terminal's live folder, else where it was made.
 function place(s) {
@@ -123,6 +127,7 @@ export default class Menu extends View {
     closeOverlay(props()?.overlay);
     if (it[1] === "space-icon") openOverlay({ mod: "t3-menu", kind: "dialog", width: 420, height: 520, props: { tab: "space-icon", target: it[2] } });
     else if (it[1] === "worktree") openOverlay({ mod: "worktree", kind: "dialog", ...(it[2].action === "open" ? { width: 560, height: 480 } : { width: 440, height: 260 }), props: it[2] });
+    else if (it[1] === "space.new") newSpace(it[2]);
     else run(it[1], it[2]);
   }
 

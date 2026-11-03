@@ -33,6 +33,7 @@ The agent reads the folder's `RECIPE.md` and files, tells you what the mod runs 
 | `cmd-shift-b` | layout only | Switch the sidebar between Focus and Spaces + Agents |
 | `cmd-shift-a` | layout only | One-agent view on or off |
 | `cmd-shift-e` | layout only | Files and Changes panel |
+| `cmd-n` | layout only | New space: pick its folder first |
 
 ## Working on it
 

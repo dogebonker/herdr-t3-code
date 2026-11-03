@@ -52,7 +52,7 @@ The PR badge is `#123` in the state's color: open `ansi2`, draft `dim`, merged `
 - Hover a finished, unpinned card: the corner turns into "Settle" with a check. Hover also shows a clock button for snoozing (not on blocked or pinned cards) and a `⌘N` hint for the first nine cards.
 - `t3-focus.settle` (cmd-shift-s): puts away the agent on screen when it's finished and not pinned, and un-settles it when it's already settled. After putting away the agent on screen, focus moves on to the card below it, and from the last card back to the first.
 - `t3-focus.jump-1` to `t3-focus.jump-9`: focus the Nth card, counting pins, then Active, then the Working cards shown.
-- Search opens the `picker`. New space runs `space.new`. New agent opens `new-menu`, or the mod named in the `newMenu` prop.
+- Search opens the `picker`. New space opens the system folder picker (`pickFolder`) and runs `space.new` with the chosen folder. Cancelling makes nothing. Without a folder, `space.new` would start in the focused terminal's folder. New agent opens `new-menu`, or the mod named in the `newMenu` prop.
 - The filter opens a 260px popover with a "Search spaces…" field, "All spaces" and each space with its avatar. Click shows that space alone. Shift-click adds or removes a space and keeps the popover open. A check badge marks the chosen ones. The filter is remembered.
 
 **Settle.** Settling writes a label on the agent's terminal, so it lasts as long as the terminal. A settled agent comes back to the top of Active by itself when it or a sub-agent gets busy, or when it ends another turn. Hover a settled row and its time becomes an undo arrow that brings it back. Settled shows 10 rows, then "Show N more" adds 25.

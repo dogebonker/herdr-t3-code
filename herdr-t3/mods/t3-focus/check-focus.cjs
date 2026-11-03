@@ -79,7 +79,7 @@ function fixture() {
     home: () => "/Users/me",
     setAgentOrder: (xs) => { f.order = Array.from(xs); },
     run: (...args) => f.calls.push(args), notify: (n) => f.notifications.push(n), openOverlay() {}, closeOverlay() {},
-    hc: async () => ({ code: 0 }), nextCommand: () => f.commands.length ? Promise.resolve(f.commands.shift()) : new Promise(() => {}),
+    hc: async () => ({ code: 0 }), pickFolder: async () => f.picked, nextCommand: () => f.commands.length ? Promise.resolve(f.commands.shift()) : new Promise(() => {}),
   };
   // space-icon.js, the shared avatar rule, is inlined as the mod's own copy is.
   const src = ["space-icon.js", "main.js"].map((f) => fs.readFileSync(path.join(__dirname, f), "utf8")).join("\n")
@@ -411,4 +411,12 @@ test("a card dragged out the right edge arms a reference; Esc, 10s or a press el
 test("a reference stays one harmless line whatever the title holds", () => {
   const f = fixture();
   assert.equal(f.env.oneLine('[agent t1 "a\nrm -rf ~\r\u001b[201~x\u202e"]'), '[agent t1 "a rm -rf ~ [201~x "]');
+});
+
+test("New space asks for a folder: it starts there, and cancelling makes nothing", async () => {
+  const f = fixture(); f.render();
+  f.picked = null; f.event("focus-new-space", "on_click"); await new Promise((r) => setImmediate(r));
+  assert.deepEqual(f.calls.filter((c) => c[0] === "space.new"), []);
+  f.picked = "/Users/me/acme"; f.event("focus-new-space", "on_click"); await new Promise((r) => setImmediate(r));
+  assert.equal(JSON.stringify(f.calls.filter((c) => c[0] === "space.new")), JSON.stringify([["space.new", { folder: "/Users/me/acme" }]]));
 });

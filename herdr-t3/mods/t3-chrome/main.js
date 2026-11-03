@@ -1,6 +1,10 @@
 import { View, div, svg } from "gpui-kit";
 import { h_flex, v_flex } from "gpui-base";
-import { theme, run, props, updates, layout, nextCommand } from "herdr";
+import { theme, run, props, updates, layout, nextCommand, pickFolder } from "herdr";
+
+// space.new without a folder starts where the focused terminal is; a new space here starts where the person picks.
+// Cancelling the picker makes nothing.
+const newSpace = (args = {}) => pickFolder({ prompt: "Open as space" }).then((folder) => { if (folder) run("space.new", { ...args, folder }); });
 
 function find(node, id) {
   if (node?.id === id) return node;
@@ -21,7 +25,10 @@ export default class WorkspaceChrome extends View {
     if (props()?.footer) return;
     cx.spawn(async (cx) => {
       for (;;) {
-        if (await nextCommand() === "sidebar") switchSidebar();
+        const c = await nextCommand();
+        if (c === "sidebar") switchSidebar();
+        // `t3-chrome.new-space` (cmd-n in this layout): see newSpace.
+        else if (c === "new-space") newSpace();
         cx.notify();
       }
     });

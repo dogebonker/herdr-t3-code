@@ -9,10 +9,14 @@
 
 import { View, div, image, svg } from "gpui-kit";
 import { v_flex, h_flex, Popover, Popup, InputState, Input, CalendarState } from "gpui-base";
-import { agents, terminals, panes, spaces, focused, run, hc, notify, theme, shared, setShared, setAgentOrder, props, nextCommand, settings, layout, exec, home } from "herdr";
+import { agents, terminals, panes, spaces, focused, run, hc, notify, theme, shared, setShared, setAgentOrder, props, nextCommand, settings, layout, exec, home, pickFolder } from "herdr";
 import { namer } from "./name.js";
 // Space avatars (icon, favicon or letter), t3-spaces' rule: drawn here with 4px corners.
 import { avatar } from "./space-icon.js";
+
+// space.new without a folder starts where the focused terminal is; a new space here starts where the person picks.
+// Cancelling the picker makes nothing.
+const newSpace = (args = {}) => pickFolder({ prompt: "Open as space" }).then((folder) => { if (folder) run("space.new", { ...args, folder }); });
 
 const RANK = { blocked: 4, done: 3, working: 2, idle: 1 };
 const BUSY = new Set(["working", "blocked"]);
@@ -1208,7 +1212,7 @@ export default class Focus extends View {
         .child(svg("mods/workspace-chrome/search.svg").size(14).flex_none().text_color(lit("focus-search", t.dim)))
         .child(div().child("Search")))
       .child(filter)
-      .child(tool("focus-new-space", "New space", "folder-plus", () => run("space.new")))
+      .child(tool("focus-new-space", "New space", "folder-plus", () => newSpace()))
       // The layout passes its own menu; docked alone, the shipped one.
       .child(tool("focus-new-agent", "New agent", "square-pen", () => run("mod.open", { name: props()?.newMenu ?? "new-menu" })));
 
